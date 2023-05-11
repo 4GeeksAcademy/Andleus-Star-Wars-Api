@@ -38,7 +38,7 @@ class Planet(db.Model):
 
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(200), unique=True, nullable=False)
     description = db.Column(db.String(240))
     eye_color = db.Column(db.String(100))
 
@@ -51,6 +51,24 @@ class Character(db.Model):
             "name": self.name,
             "description": self.description,
             "eye_color": self.eye_color
+        }
+    
+
+class Vehicle(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), unique=True, nullable=False)
+    description = db.Column(db.String(240))
+    model = db.Column(db.String(200))
+
+    def __repr__(self):
+        return '<Vehicle %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "model": self.model
         }
     
     

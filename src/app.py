@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planet, Character
+from models import db, User, Planet, Character, Vehicle
 #from models import Person
 
 app = Flask(__name__)
@@ -94,7 +94,34 @@ def post_character():
     response_body = {"msg": "Character added succesfully!"}
     return jsonify(response_body), 200
 
+
+#VEHICLES
+
+@app.route('/vehicle', methods=['GET'])
+def get_vehicles():
+    allVehicles = Vehicle.query.all()
+    result = [element.serialize() for element in allVehicles]
+    return jsonify(result), 200
+
+@app.route('/character', methods=['POST'])
+def post_vehicle():
+
+    data = request.get_json()
+
+    vehicle = Vehicle(name=data['name'], description=data['description'], model=data['model'])
+
+    db.session.add(vehicle)
+    db.session.commit()
+
+    response_body = {"msg": "Vehicle added succesfully!"}
+    return jsonify(response_body), 200
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)
+    
+
+
+
+
