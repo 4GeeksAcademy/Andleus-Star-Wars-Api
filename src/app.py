@@ -122,7 +122,6 @@ def post_vehicle():
 #FAVORITE PLANET
 @app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
 def add_favorite_planet(planet_id):
-    # Capturamos la informacion del request body y accedemos a planet_ud id
  
     user = User.query.get(current_logged_user_id)
 
