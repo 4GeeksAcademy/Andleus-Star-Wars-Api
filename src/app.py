@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planet, Character, Vehicle
+from models import db, User, Planet, Character, Vehicle, Favorite 
 #from models import Person
 
 app = Flask(__name__)
@@ -30,6 +30,9 @@ setup_admin(app)
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
+
+#AUTENTICACION
+current_logged_user_id = 1
 
 # generate sitemap with all your endpoints
 @app.route('/')
@@ -114,6 +117,24 @@ def post_vehicle():
     db.session.commit()
 
     response_body = {"msg": "Vehicle added succesfully!"}
+    return jsonify(response_body), 200
+
+#FAVORITE PLANET
+@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+def add_favorite_planet(planet_id):
+    # Capturamos la informacion del request body y accedemos a planet_ud id
+ 
+    user = User.query.get(current_logged_user_id)
+
+    new_favorite = Favorite(user_id=current_logged_user_id, planet_id=planet_id)
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    response_body = {
+        "msg": "Planeta agregado correctamente", 
+        "favorite": new_favorite.serialize()
+    }
+
     return jsonify(response_body), 200
 
 # this only runs if `$ python src/app.py` is executed

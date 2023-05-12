@@ -17,7 +17,7 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
-
+#PLANET
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
@@ -35,7 +35,7 @@ class Planet(db.Model):
             "population": self.population
         }
     
-
+#CHARACTER
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), unique=True, nullable=False)
@@ -53,7 +53,7 @@ class Character(db.Model):
             "eye_color": self.eye_color
         }
     
-
+#VEHICLE
 class Vehicle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), unique=True, nullable=False)
@@ -71,4 +71,23 @@ class Vehicle(db.Model):
             "model": self.model
         }
     
-    
+#FAVORITES
+class Favorite(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=True)
+   
+    #TODO: Tendreis que establecer esta relacion con la tabla People
+    #people_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=True)
+
+    planet = db.relationship('Planet')
+
+    def __repr__(self):
+        return f'<Favorite {self.id}>'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user. id,
+            'planet': self.planet.serialize() if self.planet else None,
+        }
