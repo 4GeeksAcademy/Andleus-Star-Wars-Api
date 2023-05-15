@@ -77,18 +77,19 @@ class Favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=True)
-   
-    #TODO: Tendreis que establecer esta relacion con la tabla People
-    #people_id = db.Column(db.Integer, db.ForeignKey('planet.id'), nullable=True)
+    character_id = db.Column(db.Integer, db.ForeignKey('character.id'), nullable=True)
 
     planet = db.relationship('Planet')
+    character = db.relationship('Character')
 
     def __repr__(self):
-        return f'<Favorite {self.id}>'
+        return f'<Favorite {self.id} >'
 
     def serialize(self):
         return {
             'id': self.id,
             'user_id': self.user.id,
             'planet': self.planet.serialize() if self.planet else None,
+            'character': self.character.serialize() if self.character else None
         }
+    

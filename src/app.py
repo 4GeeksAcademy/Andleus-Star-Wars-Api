@@ -136,6 +136,45 @@ def add_favorite_planet(planet_id):
 
     return jsonify(response_body), 200
 
+#FAVORITE CHARACTER
+@app.route('/favorite/character/<int:character_id>', methods=['POST'])
+def add_favorite_character(character_id):
+ 
+    user = User.query.get(current_logged_user_id)
+
+    new_favorite = Favorite(user_id=current_logged_user_id, character_id = character_id)
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    response_body = {
+        "msg": "Personaje agregado correctamente", 
+        "favorite": new_favorite.serialize()
+    }
+
+    return jsonify(response_body), 200
+
+
+#DELETE
+@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def delete_favorite_planet(planet_id, user_id):
+ 
+    user = User.query.get(user_id)
+    planet = Planet.query.get(planet_id)
+    favorite = Favorite.query.filter_by(user=user, planet=planet).first()
+
+    if favorite is None:
+        return jsonify({'msg' : 'No favorite found'}), 404
+    
+    db.session.delete(favorite)
+    db.session.commit()
+
+    response_body = {
+        "msg" : "Planeta favorito eliminado correctamente"
+    }
+    return jsonify(response_body), 200
+
+
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
