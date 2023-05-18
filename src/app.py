@@ -154,13 +154,11 @@ def add_favorite_character(character_id):
     return jsonify(response_body), 200
 
 
-#DELETE
-@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
-def delete_favorite_planet(planet_id, user_id):
+#DELETE FAV PLANET
+@app.route('/favorite/planet/<int:favorite_id>', methods=['DELETE'])
+def delete_favorite_planet(favorite_id):
  
-    user = User.query.get(user_id)
-    planet = Planet.query.get(planet_id)
-    favorite = Favorite.query.filter_by(user=user, planet=planet).first()
+    favorite = Favorite.query(favorite_id)
 
     if favorite is None:
         return jsonify({'msg' : 'No favorite found'}), 404
@@ -173,7 +171,22 @@ def delete_favorite_planet(planet_id, user_id):
     }
     return jsonify(response_body), 200
 
+#DELETE FAV CHARACTER
+@app.route('/favorite/character/<int:favorite_id>', methods=['DELETE'])
+def delete_favorite_character(favorite_id):
+    
+    favorite = Favorite.query.get(favorite_id)
 
+    if favorite is None:
+        return jsonify({'msg' : 'No favorite found'}), 404
+    
+    db.session.delete(favorite)
+    db.session.commit()
+
+    response_body = {
+        "msg" : "Personaje favorito eliminado correctamente"
+    }
+    return jsonify(response_body), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
